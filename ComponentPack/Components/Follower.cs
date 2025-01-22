@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -64,13 +63,10 @@ namespace ComponentPack
                 }
 
                 Vector2 shiftPosition = new Vector2((float)Math.Cos(RotationAroundLeader),
-               (float)Math.Sin(RotationAroundLeader)) * Math.Clamp(distance, 0, float.MaxValue);
+                (float)Math.Sin(RotationAroundLeader)) * Math.Clamp(distance, 0, float.MaxValue);
+
                 Parent.Transform.Position = Leader.Transform.Position + shiftPosition;
-            }
-            else
-            {
-                Debug.WriteLine("I'm a Follower component and I don't get my Parent");
-            }
+            }          
         }
 
         public void DrawMe(SpriteBatch spriteBatch) 
@@ -80,12 +76,13 @@ namespace ComponentPack
 
         public void DeleteMe()
         {
-
+            Leader = null;
+            Parent = null;
         }
 
-        public void AttachMe()
+        public GameObject GetParent()
         {
-
+            return Parent;
         }
     }
 }

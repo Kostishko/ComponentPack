@@ -23,5 +23,14 @@ namespace ComponentPack
             }
             return value;
         }
+
+
+        public enum DrawLayers
+        {
+            background,
+            ground,
+            foreground,
+            maxLayer 
+        }
     }
 }

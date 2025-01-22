@@ -36,5 +36,7 @@ namespace ComponentPack
         /// </summary>
         public abstract void DeleteMe();
 
+        public abstract GameObject GetParent();
+
     }
 }
