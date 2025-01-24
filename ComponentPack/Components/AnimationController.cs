@@ -16,6 +16,8 @@ namespace ComponentPack
     /// </summary>
     public class AnimationController : IComponent
     {
+
+        #region IComponent variables
         private GameObject parent;
         public GameObject Parent
         {
@@ -23,9 +25,80 @@ namespace ComponentPack
             set { parent = value; }
         }
 
+        #endregion
+
+
+        private Sprite spriteComponent;
+        private Dictionary<string, AnimationSequence> animations;
+
+        private AnimationSequence currentAnimation;
+        public string currentAnimationName;
+        private int currentFrame;
+        public float speed;
+        private float currentTimer;
+
+        public bool IsLooped;
+
+        public enum AnimationStates : byte
+        {
+            play,
+            pause,
+            stop,
+        }
+
+        private AnimationStates animationState;
+
+        public event EventHandler AnimationFin;
+
+        public AnimationController(GameObject parent, Sprite spriteComponent, Dictionary<string, AnimationSequence> animations, float animationSpeed) 
+        {
+            this.spriteComponent = spriteComponent;
+            this.animations = animations;
+            this.speed = 1 / animationSpeed;
+            currentTimer = 1 / animationSpeed;
+            animationState = AnimationStates.stop;
+        }
+
+
         public void UpdateMe()
         {
+            switch (animationState)
+            {
+                case AnimationStates.play:
+                    if (currentTimer > 0)
+                    {
+                        currentTimer -= (float)Extentions.TotalSeconds;
+                    }
+                    else
+                    {
+                        currentTimer = speed;
+                        if (currentFrame + 1 >= currentAnimation.frameCount)
+                        {
+                            if (IsLooped)
+                            {
+                                currentFrame = 0;
+                                spriteComponent.SetSourceRectangleLocation(currentAnimation.startFramePos);
+                            }
+                            else
+                            {
+                                animationState = AnimationStates.stop;
+                            }
+                            AnimationFin?.Invoke(this, EventArgs.Empty);
+                        }
+                        else
+                        {
+                            currentFrame++;
+                            spriteComponent.SetSourceRectangleLocation(new Point(spriteComponent.SourceRectangle.X + spriteComponent.SourceRectangle.Width,
+                                spriteComponent.SourceRectangle.Y));
+                        }
+                    }
 
+                    break;
+                case AnimationStates.pause:
+                    break;
+                case AnimationStates.stop:
+                    break;
+            }
         }
 
         public void DrawMe(SpriteBatch spriteBatch)

@@ -75,5 +75,10 @@ namespace ComponentPack
             return Parent;
         }
 
+        public void SetSourceRectangleLocation(Point newLocation)
+        {
+            sourceRectangle.Location = newLocation;
+        }
+
     }
 }

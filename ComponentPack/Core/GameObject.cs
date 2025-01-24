@@ -43,7 +43,7 @@ namespace ComponentPack
         }
         #endregion
 
-        public void Update()
+        public virtual void UpdateMe()
         {
             for (int i = 0; i < MyComponents.Count; i++) 
             {

@@ -32,5 +32,7 @@ namespace ComponentPack
             foreground,
             maxLayer 
         }
+
+        public static double TotalSeconds;
     }
 }
