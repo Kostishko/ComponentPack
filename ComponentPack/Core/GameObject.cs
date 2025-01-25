@@ -79,7 +79,7 @@ namespace ComponentPack
     /// <summary>
     /// Position and rotation.
     /// </summary>
-    public struct Transform2D
+    public class Transform2D
     {
         private float rotation;
         public float Rotation

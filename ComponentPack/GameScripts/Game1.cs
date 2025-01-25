@@ -20,10 +20,9 @@ namespace ComponentPack
 
         #region Load data
         //current loaded files
-        //private SaveFile currentSaveFile;
-        //private ScoreRecordsFile currentScoreFile;
-        //internal static Preferences currentPreferences;
-        //internal static ScoreRecordsFile currentScoreRecords;
+
+        internal static PlayerPreferences currentPreferences;
+        internal static RecordsData currentScoreRecords;
 
         #endregion
 
@@ -47,6 +46,9 @@ namespace ComponentPack
 
         private MusicManager musicManager;
 
+        //Camers
+        private Camera _camera;
+
         #endregion
 
         #region UI
@@ -58,9 +60,7 @@ namespace ComponentPack
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.SynchronizeWithVerticalRetrace = true;
@@ -72,8 +72,8 @@ namespace ComponentPack
 
             //Scren bounds
             _graphics.IsFullScreen = false;
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 720;
+            _graphics.PreferredBackBufferHeight = 1280;
 
 
 
@@ -97,6 +97,10 @@ namespace ComponentPack
             UIProcessor.ScreenBounds = new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             UIProcessor.BigUIFont = Content.Load<SpriteFont>("Fonts/UIFontBig");
             UIProcessor.MouseCoursorTexture = Content.Load<Texture2D>("Sprites/Cursor Default");
+
+            //camera
+            _camera = new Camera(Vector2.Zero, new Vector2(-10000, -10000), new Vector2(10000, 10000), new Vector2(720, 1280));
+            //_camera.SetCameraTarget();
 
             //File loader
             FileLoader.RootFolder = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\Content"));
@@ -129,10 +133,10 @@ namespace ComponentPack
             #endregion
 
             #region Debug
-            DebugManager.DebugTexture = Content.Load<Texture2D>("Extentions/DebugBounds");
+            DebugManager.DebugTexture = Content.Load<Texture2D>("Debug/DebugBounds");
             DebugManager.isWorking = true;
             DebugManager.SpriteBatch = _spriteBatch;
-            DebugManager.DebugFont = Content.Load<SpriteFont>("Extentions/DebugFont");
+            DebugManager.DebugFont = Content.Load<SpriteFont>("Debug/DebugFont");
             #endregion
 
 
