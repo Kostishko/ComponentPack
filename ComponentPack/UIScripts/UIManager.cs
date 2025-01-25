@@ -126,44 +126,44 @@ namespace ComponentPack
             newGameButton = new UIButton(new Point(mainMenuPanel.rectangle.Width / 8, mainMenuPanel.rectangle.Height / 7),
                                       mainMenuPanel,
                                       new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 4, mainMenuPanel.rectangle.Height / 6),
-                                      content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
+                                      content.Load<Texture2D>("C_NewGame1"), new Rectangle(0, 0, 96, 32),
                                       content.Load<SpriteFont>("Fonts/UIFontBig"), "newGame", "New Game");
 
             continueButton = new UIButton(new Point(mainMenuPanel.rectangle.Width / 8, mainMenuPanel.rectangle.Height * 2 / 7),
                                      mainMenuPanel,
                                      new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 4, mainMenuPanel.rectangle.Height / 6),
-                                     content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
+                                     content.Load<Texture2D>("C_Continue1"), new Rectangle(0, 0, 96, 32),
                                      content.Load<SpriteFont>("Fonts/UIFontBig"), "continue", "Continue");
 
             settingsButton = new UIButton(new Point(mainMenuPanel.rectangle.Width / 8, (int)Math.Round(mainMenuPanel.rectangle.Height * 3f / 7)),
                                       mainMenuPanel,
                                       new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 8, mainMenuPanel.rectangle.Height / 6),
-                                      content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
+                                      content.Load<Texture2D>("A_Settings1"), new Rectangle(0, 0, 96, 32),
                                       content.Load<SpriteFont>("Fonts/UIFontBig"), "settings", "Settings");
 
-            creatorsButton = new UIButton(new Point(mainMenuPanel.rectangle.Width * 4 / 8, (int)Math.Round(mainMenuPanel.rectangle.Height * 3f / 7)),
-                                      mainMenuPanel,
-                                      new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 8, mainMenuPanel.rectangle.Height / 6),
-                                      content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
-                                      content.Load<SpriteFont>("Fonts/UIFontBig"), "creators", "Creators");
+            //creatorsbutton = new uibutton(new point(mainmenupanel.rectangle.width * 4 / 8, (int)math.round(mainmenupanel.rectangle.height * 3f / 7)),
+            //                          mainmenupanel,
+            //                          new rectangle(0, 0, mainmenupanel.rectangle.width * 3 / 8, mainmenupanel.rectangle.height / 6),
+            //                          content.load<texture2d>("sprites/part 3 a"), new rectangle(0, 0, 68, 36),
+            //                          content.load<spritefont>("fonts/uifontbig"), "creators", "creators");
 
-            instructionButton = new UIButton(new Point(mainMenuPanel.rectangle.Width / 8, (int)Math.Round(mainMenuPanel.rectangle.Height * 4f / 7)),
-                                      mainMenuPanel,
-                                      new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 8, mainMenuPanel.rectangle.Height / 6),
-                                      content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
-                                      content.Load<SpriteFont>("Fonts/UIFontBig"), "instructions", "Instruction");
+            //instructionButton = new UIButton(new Point(mainMenuPanel.rectangle.Width / 8, (int)Math.Round(mainMenuPanel.rectangle.Height * 4f / 7)),
+            //                          mainMenuPanel,
+            //                          new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 8, mainMenuPanel.rectangle.Height / 6),
+            //                          content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
+            //                          content.Load<SpriteFont>("Fonts/UIFontBig"), "instructions", "Instruction");
 
             recordsButton = new UIButton(new Point(mainMenuPanel.rectangle.Width * 4 / 8, (int)Math.Round(mainMenuPanel.rectangle.Height * 4f / 7)),
                                       mainMenuPanel,
                                       new Rectangle(0, 0, mainMenuPanel.rectangle.Width * 3 / 8, mainMenuPanel.rectangle.Height / 6),
-                                      content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
+                                      content.Load<Texture2D>("C_info1"), new Rectangle(0, 0, 96, 32),
                                       content.Load<SpriteFont>("Fonts/UIFontBig"), "records", "Records");
 
 
             exitButton = new UIButton(new Point(mainMenuPanel.rectangle.Width / 4, (int)Math.Round(mainMenuPanel.rectangle.Height * 5f / 7)),
                                       mainMenuPanel,
                                       new Rectangle(0, 0, mainMenuPanel.rectangle.Width / 2, mainMenuPanel.rectangle.Height / 6),
-                                      content.Load<Texture2D>("Sprites/Part 3 A"), new Rectangle(0, 0, 68, 36),
+                                      content.Load<Texture2D>("A_Exit1"), new Rectangle(0, 0, 96, 32),
                                       content.Load<SpriteFont>("Fonts/UIFontBig"), "exit", "Exit");
 
             newGameButton.Clicked += (s, e) => {
