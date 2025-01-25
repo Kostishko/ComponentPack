@@ -111,6 +111,58 @@ namespace ComponentPack
 
         }
 
+        public void Play(string animationName)
+        {
+            animationState = AnimationStates.play;
+            currentAnimationName = animationName;
+
+            if (currentAnimation != animations[animationName])
+            {
+                currentAnimation = animations[animationName];
+                currentFrame = 0;
+                spriteComponent.SetSourceRectangleLocation(currentAnimation.startFramePos);
+
+            }
+        }
+
+        /// <summary>
+        /// Worj only if this animation controller haa been created with one AnimationSequence (not a Dictionary of animations). 
+        /// </summary>
+        public void Play()
+        {
+            if (animations.ContainsKey("animDefault"))
+            {
+                Play("animDefault");
+                currentAnimationName = "animDefault";
+
+
+            }
+        }
+
+        public void Stop()
+        {
+            spriteComponent.SetSourceRectangleLocation(currentAnimation.startFramePos);
+            animationState = AnimationStates.stop;
+
+        }
+
+        public void Pause()
+        {
+            animationState = AnimationStates.pause;
+        }
+
+        public void UnPause()
+        {
+            animationState = AnimationStates.play;
+        }
+
+        public void SetAnimationSpeed(float speed)
+        {
+            this.speed = speed;
+        }
+
+
+
         public GameObject GetParent()
         {
             return parent;

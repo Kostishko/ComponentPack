@@ -51,7 +51,7 @@ namespace ComponentPack
             }
         }
 
-        public void DrawMe(SpriteBatch spriteBatch)
+        public virtual void DrawMe(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < MyComponents.Count; i++)
             {
@@ -64,7 +64,7 @@ namespace ComponentPack
             MyComponents.Add(component);
         }
 
-        public void DeleteMe()
+        public virtual void DeleteMe()
         {
             for (int i = 0; i < MyComponents.Count; i++)             
             {

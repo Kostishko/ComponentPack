@@ -51,6 +51,12 @@ namespace ComponentPack
 
         #endregion
 
+        #region Gameplay variables
+
+        public int CurrentScore;
+
+        #endregion
+
         #region UI
 
         UIManager uiManager;
@@ -114,22 +120,38 @@ namespace ComponentPack
             musicManager = new MusicManager(songs);
             musicManager.Play("mainMenu");
 
-            //try
-            //{
-            //    if (File.Exists(FileLoader.RootFolder + "\\Preferences\\PlayerPreferences.json"))
-            //        currentPreferences = FileLoader.LoadFromJson<Preferences>(FileLoader.RootFolder + "\\Preferences\\PlayerPreferences.json");
-            //    else
-            //        Debug.WriteLine("First load. File PlayerPreferences hasn't been found.");
-            //}
-            //catch
-            //{
-            //    Debug.WriteLine("First load. File PlayerPreferences hasn't been found.");
-            //}
+            try
+            {
+                if (File.Exists(FileLoader.RootFolder + "\\SavedData\\PlayerPreferences.json"))
+                    currentPreferences = FileLoader.LoadFromJson<PlayerPreferences>(FileLoader.RootFolder + "\\SavedData\\PlayerPreferences.json");
+                else
+                    Debug.WriteLine("First load. File PlayerPreferences hasn't been found.");
+            }
+            catch
+            {
+                Debug.WriteLine("First load. File PlayerPreferences hasn't been found.");
+            }
 
+            try
+            {
+                if (File.Exists(FileLoader.RootFolder + "\\SavedData\\RecordsData.json"))
+                {
+                    currentScoreRecords = FileLoader.LoadFromJson<RecordsData>(FileLoader.RootFolder + "\\SavedData\\RecordsData.json");
+                    currentScoreRecords.ScoreRecords.Sort((x, y) => y.Score.CompareTo(x.Score)); // do the sorting
+                }
+            }
+            catch
+            {
+                Debug.WriteLine("Something wrong with the Scores file loading!");
+            }
 
-            //musicManager.SetMusicVolume(currentPreferences.MusicVolume);
-            //SoundManager.SetMasterVolume(currentPreferences.SoundVolume);
+            musicManager.SetMusicVolume(currentPreferences.MusicVolume);
+            SoundManager.SetMasterVolume(currentPreferences.SoundVolume);
 
+            #endregion
+
+            #region Gameplay objects loading
+            CurrentScore = 0;
             #endregion
 
             #region Debug
@@ -215,12 +237,53 @@ namespace ComponentPack
             _spriteBatch.End();
 
             //UI draw
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);            
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp); 
+            
             UIProcessor.DrawMe(_spriteBatch);
+
             uiManager.DrawMe(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        //Loading for new game methods
+        public void NewGameLoad()
+        {
+            //player data loading
+            CurrentScore = 0;            
+            StateOfGame = StateGame.Game;
+
+        }
+
+
+        /// <summary>
+        /// Save new record if this is a record
+        /// </summary>
+        public void SaveRecords()
+        {
+            ScoreRecord newRecord = new ScoreRecord();
+            newRecord.Score = CurrentScore;
+            currentScoreRecords.ScoreRecords.Add(newRecord);
+            currentScoreRecords.ScoreRecords.Sort((x, y) => y.Score.CompareTo(x.Score)); // sort records
+            currentScoreRecords.ScoreRecords.RemoveAt(5);
+            uiManager.ScoreArrange();
+
+            try
+            {
+                if (File.Exists(FileLoader.RootFolder + "\\SavedData\\RecordsData.json"))
+                {
+                    FileLoader.DeleteFile(FileLoader.RootFolder + "\\SavedData\\RecordsData.json");
+                    FileLoader.SaveToJson<RecordsData>(currentScoreRecords, FileLoader.RootFolder + "\\SavedData\\RecordsData.json");
+                }
+            }
+            catch
+            {
+                Debug.WriteLine("Something wrong with ScoreRecord file saving!");
+            }
+        }
+
     }
+
+
 }
