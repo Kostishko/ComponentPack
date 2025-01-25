@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace ComponentPack.UIScripts
+namespace ComponentPack
 {
     public class UIButton : UIElement
     {

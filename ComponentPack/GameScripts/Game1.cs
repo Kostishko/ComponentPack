@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ComponentPack
 {
@@ -8,6 +10,11 @@ namespace ComponentPack
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+
+        public static event EventHandler pauseForUI;
+
+        public static ContentManager CommonContent;
 
         public Game1()
         {
