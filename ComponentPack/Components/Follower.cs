@@ -45,6 +45,7 @@ namespace ComponentPack
             RotationAroundLeader = (float)Math.Atan2(ShiftPosition.Y, ShiftPosition.X);
             rotationOffset = (float)Math.Atan2(ShiftPosition.Y, ShiftPosition.X);
             distance = (float)Math.Sqrt(Math.Pow(ShiftPosition.X, 2) + Math.Pow(ShiftPosition.Y, 2));
+            Parent.AttachComponent(this);
         }
 
         public void UpdateMe()

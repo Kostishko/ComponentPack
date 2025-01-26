@@ -81,19 +81,9 @@ namespace ComponentPack
                 float targetX = -cameraTarget.Transform.Position.X + screenSize.X / (2 * zoom) - 100;
                 float targetY = -cameraTarget.Transform.Position.Y + (screenSize.Y / 2f) / zoom;
 
-                if (targetX + screenSize.X / (2 * zoom) < rightBottomBorder.X &&
-                    targetX > leftUpperBorder.X)
-                {
-                    position.X = MathHelper.Lerp(position.X, targetX, 0.04f);
-                    _velocity.X = position.X - targetX;
-                }
+                position.Y = MathHelper.Lerp(position.Y, targetY, 0.04f);
+               // _velocity.Y = position.Y - targetY;
 
-                if (targetY + screenSize.Y / (2 * zoom) < rightBottomBorder.Y &&
-                    targetY + screenSize.Y / (2 * zoom) > leftUpperBorder.Y)
-                {
-                    position.Y = MathHelper.Lerp(position.Y, targetY, 0.04f);
-                    _velocity.Y = position.Y - targetY;
-                }
 
             }
         }

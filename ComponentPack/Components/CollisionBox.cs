@@ -47,15 +47,16 @@ namespace ComponentPack
             this.collisionRec = collisionRec;
 
             collisionDefaultSize = collisionRec.Size;
-            originPoint = this.collisionRec.Size.ToVector2() / 2;            
-            this.collisionRec.Location = parent.Transform.Position.ToPoint() - originPoint.ToPoint();
+            originPoint = this.collisionRec.Size.ToVector2() / 2;
+            this.collisionRec.Location = parent.Transform.Position.ToPoint(); // - originPoint.ToPoint();
 
+            Parent.AttachComponent(this);
             CollisionProcessor.AddNewComponent(this);
         }
 
         public void UpdateMe()
         {
-            collisionRec.Location = Parent.Transform.Position.ToPoint()  - originPoint.ToPoint();            
+            collisionRec.Location = Parent.Transform.Position.ToPoint();//  - originPoint.ToPoint();            
         }
 
 

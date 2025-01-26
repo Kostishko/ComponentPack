@@ -18,9 +18,13 @@ namespace ComponentPack
         public Dictionary<string, AnimationSequence> BubbleAnimations;
         public CollisionBox BubbleCollision;
 
+        public event EventHandler Exploded;
+
+        public bool IsActive;
+
         public Bubble(Vector2 position, float rotation, ContentManager content) : base (position, rotation)
         {
-
+            IsActive = false; 
         }
 
         public void LoadMe(Vector2 newPositon)
@@ -30,9 +34,15 @@ namespace ComponentPack
 
         public void ExploudMe()
         {
-
+            Exploded?.Invoke(this, EventArgs.Empty);
+            IsActive = false;
         }
 
+        public override void DrawMe(SpriteBatch sp)
+        {
+            base.DrawMe(sp);
+            DebugManager.DebugRectangle(BubbleCollision.CollisionRectangle);
+        }
         
 
 

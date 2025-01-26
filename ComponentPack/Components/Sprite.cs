@@ -51,6 +51,8 @@ namespace ComponentPack
             this.DestinationRectangle = destinationRectangle;
             Origin = new Vector2(destinationRectangle.Width/2, destinationRectangle.Height/2);
             SpriteEffect = SpriteEffects.None;
+            Parent.AttachComponent(this);
+            Tint = Color.White;
         }
 
         public void UpdateMe()

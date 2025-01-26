@@ -36,11 +36,14 @@ namespace ComponentPack
         public CharacterStates currentState;
 
         //character variables
-        public float fallSpeed = 100f;
-        public float moveSpeed = 100f;
-        public float jumpSpeed = 100f;
-        public float timeToUp = 1f;
+        public float fallSpeed = 150f;
+        public float moveSpeed = 300f;
+        public float jumpSpeed = 550f;
+        public float timeToUp = 1.5f;
         public float timerToUp = 0f;
+
+        //Death high
+        public float deathHighY;
         
         
 
@@ -49,26 +52,45 @@ namespace ComponentPack
 
         public MainCharacter(Vector2 position, float rotation, ContentManager content) : base (position, rotation) 
         {
-            CharacterSprite = new Sprite(this, content.Load<Texture2D>(""), new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0));
+            CharacterSprite = new Sprite(this, content.Load<Texture2D>("Sprites/superhero_sprites"), new Rectangle(0, 0, 390, 630), new Rectangle(0, 0, 65,105));
 
             CharacterAnimations = new Dictionary<string, AnimationSequence>();
-            CharacterAnimations.Add("JumpUp", new AnimationSequence(Point.Zero, 4));
-            CharacterAnimations.Add("JumpDown", new AnimationSequence(Point.Zero, 4));
-            CharacterAnimations.Add("Death", new AnimationSequence(Point.Zero, 1));
+            CharacterAnimations.Add("NewJump", new AnimationSequence(Point.Zero, 3));
+            CharacterAnimations.Add("JumpDown", new AnimationSequence(new Point(780,630), 2));
+            CharacterAnimations.Add("JumpUp", new AnimationSequence(new Point(390, 630), 2));
+            CharacterAnimations.Add("Death", new AnimationSequence(new Point(0,630), 1));           
 
-            CharacterAnimation = new AnimationController(this, CharacterSprite, CharacterAnimations, 6f);
+            CharacterSprite.Origin = new Vector2(0, 0);
 
-            CharacterCollision = new CollisionBox(this, new Rectangle(0, 0, 10, 10));
+            CharacterAnimation = new AnimationController(this, CharacterSprite, CharacterAnimations, 3f);
+            CharacterAnimation.AnimationFin += (s, a) =>
+            {
+                if (a == "NewJump")
+                {
+                    currentState = CharacterStates.JumpUp;
+                    timerToUp = timeToUp;
+                }
+
+                if (a == "Death")
+                {
+                    Game1.StateOfGame = Game1.StateGame.GameOver;
+                }
+            };
+
+            CharacterCollision = new CollisionBox(this, new Rectangle(0, 0, 65, 105));
 
             CharacterSounds = new Dictionary<string, SoundEffect>();
-            CharacterSounds.Add("Jump", content.Load<SoundEffect>(""));
-            CharacterSounds.Add("Death", content.Load<SoundEffect>(""));
+            CharacterSounds.Add("Jump", content.Load<SoundEffect>("Sounds/JumpSound"));
+            CharacterSounds.Add("Death", content.Load<SoundEffect>("Sounds/DeathSound"));
             CharacterSound = new SoundComponent(this, CharacterSounds);
 
             //Collisions
             CharacterCollision.collisionOngoing += AngryBubbleTouch;
             CharacterCollision.collisionStart += SpeechBubbleTouch;
-            CharacterCollision.collisionStart += ThoughtsBubbleTouch; 
+            CharacterCollision.collisionStart += ThoughtsBubbleTouch;
+
+            //death conditions
+            deathHighY = Transform.Position.Y + 500;
 
 
         }
@@ -77,6 +99,10 @@ namespace ComponentPack
         {
             base.UpdateMe();
 
+            if(Transform.Position.Y > deathHighY)
+            {
+                currentState = CharacterStates.Death;
+            }
             switch(currentState)
             {
                 case CharacterStates.JumpUp:
@@ -85,13 +111,14 @@ namespace ComponentPack
                     //left rigt movement
                     if (currState.IsKeyDown(Keys.A))
                     {
-                        CharacterSprite.SpriteEffect = SpriteEffects.None;
+                        CharacterSprite.SpriteEffect = SpriteEffects.FlipHorizontally;
+                       
                         Transform.Position.X -= moveSpeed * (float)Extentions.TotalSeconds;
                     }
 
                     if (currState.IsKeyDown(Keys.D))
                     {
-                        CharacterSprite.SpriteEffect = SpriteEffects.FlipHorizontally;
+                        CharacterSprite.SpriteEffect = SpriteEffects.None;
                         Transform.Position.X += moveSpeed * (float)Extentions.TotalSeconds;
                     }
 
@@ -103,10 +130,7 @@ namespace ComponentPack
                     {
                         currentState = CharacterStates.JumpDown;
                     }
-                    else
-                    {
-                        timerToUp = timeToUp;
-                    }
+                    timerToUp -= (float)Extentions.TotalSeconds;
 
                     break;
                 case CharacterStates.JumpDown:
@@ -116,12 +140,12 @@ namespace ComponentPack
                     //movement in faling
                     if (currState.IsKeyDown(Keys.A))
                     {
-                        CharacterSprite.SpriteEffect = SpriteEffects.None;
+                        CharacterSprite.SpriteEffect = SpriteEffects.FlipHorizontally;
                         Transform.Position.X -= moveSpeed * (float)Extentions.TotalSeconds;
                     }
                     if (currState.IsKeyDown(Keys.D))
                     {
-                        CharacterSprite.SpriteEffect = SpriteEffects.FlipHorizontally;
+                        CharacterSprite.SpriteEffect = SpriteEffects.None;                        
                         Transform.Position.X += moveSpeed * (float)Extentions.TotalSeconds;
                     }
 
@@ -131,10 +155,13 @@ namespace ComponentPack
 
                     break;
                 case CharacterStates.NewJump:
+                    CharacterAnimation.Play("NewJump");
+
                     break;
                 case CharacterStates.PowerJump:
                     break;
                 case CharacterStates.Death:
+                    CharacterAnimation.SetAnimationSpeed(1 / 20f);
                     CharacterAnimation.Play("Death");
                     break;
             }
@@ -145,6 +172,8 @@ namespace ComponentPack
         public override void DrawMe(SpriteBatch sp)
         {
             base.DrawMe(sp);
+
+            DebugManager.DebugRectangle(CharacterCollision.CollisionRectangle);
 
             switch (currentState)
             {
@@ -167,9 +196,12 @@ namespace ComponentPack
             if(collision is SpeechBubble speech)
             {
                 if(currentState == CharacterStates.JumpDown && 
-                    CharacterCollision.CollisionRectangle.Top < speech.BubbleCollision.CollisionRectangle.Top)
+                    CharacterCollision.CollisionRectangle.Top < speech.BubbleCollision.CollisionRectangle.Top
+                    && CharacterCollision.CollisionRectangle.Bottom<speech.BubbleCollision.CollisionRectangle.Bottom)
                 {
                     currentState = CharacterStates.NewJump;
+                    deathHighY = Transform.Position.Y + 500;
+                    CharacterSound.PlayNow("Jump");
                     speech.ExploudMe();
                 }
             }                     
@@ -182,6 +214,7 @@ namespace ComponentPack
                 if(currentState!= CharacterStates.Death)
                 {
                     currentState = CharacterStates.Death;
+                    CharacterSound.PlayNow("Death");
                     angry.ExploudMe();
                 }
             }

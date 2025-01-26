@@ -15,15 +15,15 @@ namespace ComponentPack.GameScripts
 
         public SpeechBubble(Vector2 position, float rotation, ContentManager content) : base(position, rotation, content)         
         {
-            BubbleSprite = new Sprite(this, content.Load<Texture2D>(""), new Rectangle(0,0,0,0), new Rectangle(0,0,0,0));
-
+            BubbleSprite = new Sprite(this, content.Load<Texture2D>("Sprites/SpeechBubbles"), new Rectangle(0,0,192,192), new Rectangle(0,0,150,150));
+            //BubbleSprite.Origin = new Vector2 (0,50);
             BubbleAnimations = new Dictionary<string, AnimationSequence>();
-            BubbleAnimations.Add("Idle", new AnimationSequence(Point.Zero, 3));
-            BubbleAnimations.Add("Exploud", new AnimationSequence(Point.Zero, 3));
+            BubbleAnimations.Add("Idle", new AnimationSequence(new Point(0,192), 1));
+            BubbleAnimations.Add("Exploud", new AnimationSequence(new Point(0,384), 3));
 
             BubbleAnimController = new AnimationController(this, BubbleSprite, BubbleAnimations, 6f );
 
-            BubbleCollision = new CollisionBox(this, new Rectangle(0, 0, 10, 10));
+            BubbleCollision = new CollisionBox(this, new Rectangle(0, 0, 50, 50));
 
             BubbleAnimController.IsLooped = true;
             BubbleAnimController.Play("Idle");

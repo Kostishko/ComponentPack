@@ -48,15 +48,17 @@ namespace ComponentPack
 
         private AnimationStates animationState;
 
-        public event EventHandler AnimationFin;
+        public event EventHandler<string> AnimationFin;
 
         public AnimationController(GameObject parent, Sprite spriteComponent, Dictionary<string, AnimationSequence> animations, float animationSpeed) 
         {
+            Parent = parent;
             this.spriteComponent = spriteComponent;
             this.animations = animations;
             this.speed = 1 / animationSpeed;
             currentTimer = 1 / animationSpeed;
             animationState = AnimationStates.stop;
+            Parent.AttachComponent(this);
         }
 
 
@@ -83,7 +85,7 @@ namespace ComponentPack
                             {
                                 animationState = AnimationStates.stop;
                             }
-                            AnimationFin?.Invoke(this, EventArgs.Empty);
+                            AnimationFin?.Invoke(this, currentAnimationName);
                         }
                         else
                         {

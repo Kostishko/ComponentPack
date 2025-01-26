@@ -48,6 +48,7 @@ namespace ComponentPack
             Parent = parent;
             this.soundDictionary = soundDictionary;
             SoundManager.AddComponent(this);
+            Parent.AttachComponent(this);
         }
 
 
