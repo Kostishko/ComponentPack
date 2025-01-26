@@ -10,11 +10,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System.Collections;
 using ComponentPack.GameScripts;
+using System.Reflection.Metadata;
 
 
 namespace ComponentPack
 {
-    internal class MainCharacter : GameObject
+    public class MainCharacter : GameObject
     {
         public Sprite CharacterSprite;
         public AnimationController CharacterAnimation;
@@ -34,6 +35,18 @@ namespace ComponentPack
 
         public CharacterStates currentState;
 
+        //character variables
+        public float fallSpeed = 100f;
+        public float moveSpeed = 100f;
+        public float jumpSpeed = 100f;
+        public float timeToUp = 1f;
+        public float timerToUp = 0f;
+        
+        
+
+                
+
+
         public MainCharacter(Vector2 position, float rotation, ContentManager content) : base (position, rotation) 
         {
             CharacterSprite = new Sprite(this, content.Load<Texture2D>(""), new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0));
@@ -52,6 +65,11 @@ namespace ComponentPack
             CharacterSounds.Add("Death", content.Load<SoundEffect>(""));
             CharacterSound = new SoundComponent(this, CharacterSounds);
 
+            //Collisions
+            CharacterCollision.collisionOngoing += AngryBubbleTouch;
+            CharacterCollision.collisionStart += SpeechBubbleTouch;
+            CharacterCollision.collisionStart += ThoughtsBubbleTouch; 
+
 
         }
 
@@ -63,15 +81,61 @@ namespace ComponentPack
             {
                 case CharacterStates.JumpUp:
                     CharacterAnimation.Play("JumpUp");
+
+                    //left rigt movement
+                    if (currState.IsKeyDown(Keys.A))
+                    {
+                        CharacterSprite.SpriteEffect = SpriteEffects.None;
+                        Transform.Position.X -= moveSpeed * (float)Extentions.TotalSeconds;
+                    }
+
+                    if (currState.IsKeyDown(Keys.D))
+                    {
+                        CharacterSprite.SpriteEffect = SpriteEffects.FlipHorizontally;
+                        Transform.Position.X += moveSpeed * (float)Extentions.TotalSeconds;
+                    }
+
+                    //flying up
+                    Transform.Position.Y -= jumpSpeed * (float)Extentions.TotalSeconds;
+
+                    //jump time
+                    if (timerToUp<=0)
+                    {
+                        currentState = CharacterStates.JumpDown;
+                    }
+                    else
+                    {
+                        timerToUp = timeToUp;
+                    }
+
                     break;
                 case CharacterStates.JumpDown:
+
                     CharacterAnimation.Play("JumpDown");
+
+                    //movement in faling
+                    if (currState.IsKeyDown(Keys.A))
+                    {
+                        CharacterSprite.SpriteEffect = SpriteEffects.None;
+                        Transform.Position.X -= moveSpeed * (float)Extentions.TotalSeconds;
+                    }
+                    if (currState.IsKeyDown(Keys.D))
+                    {
+                        CharacterSprite.SpriteEffect = SpriteEffects.FlipHorizontally;
+                        Transform.Position.X += moveSpeed * (float)Extentions.TotalSeconds;
+                    }
+
+
+                    //flying up
+                    Transform.Position.Y += fallSpeed * (float)Extentions.TotalSeconds;
+
                     break;
                 case CharacterStates.NewJump:
                     break;
                 case CharacterStates.PowerJump:
                     break;
                 case CharacterStates.Death:
+                    CharacterAnimation.Play("Death");
                     break;
             }
 
@@ -98,7 +162,7 @@ namespace ComponentPack
 
         }
 
-        public void BubbleTouch (GameObject collision)
+        public void SpeechBubbleTouch (object o, GameObject collision)
         {
             if(collision is SpeechBubble speech)
             {
@@ -106,20 +170,35 @@ namespace ComponentPack
                     CharacterCollision.CollisionRectangle.Top < speech.BubbleCollision.CollisionRectangle.Top)
                 {
                     currentState = CharacterStates.NewJump;
+                    speech.ExploudMe();
                 }
-            }
-
-            if (collision is AngryBubble angry)
-            {
-                if (currentState == CharacterStates.JumpDown)
-                {
-                    currentState = CharacterStates.Death;
-                }
-            }
-
-            
+            }                     
         }
 
+        public void AngryBubbleTouch (object o, GameObject collision)
+        {
+            if(collision is  AngryBubble angry)
+            {
+                if(currentState!= CharacterStates.Death)
+                {
+                    currentState = CharacterStates.Death;
+                    angry.ExploudMe();
+                }
+            }
+        }
+
+        public void ThoughtsBubbleTouch(object o, GameObject collision)
+        {
+            if (collision is ThoughtsBubble thoughts)
+            {
+                if (currentState == CharacterStates.JumpDown &&
+                   CharacterCollision.CollisionRectangle.Top < thoughts.BubbleCollision.CollisionRectangle.Top)
+                {
+                    currentState = CharacterStates.PowerJump;
+                    thoughts.ExploudMe();
+                }
+            }
+        }
 
 
 

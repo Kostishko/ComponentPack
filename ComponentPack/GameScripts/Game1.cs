@@ -54,6 +54,7 @@ namespace ComponentPack
         #region Gameplay variables
 
         public int CurrentScore;
+        public MainCharacter MainChar;
 
         #endregion
 
@@ -152,6 +153,9 @@ namespace ComponentPack
 
             #region Gameplay objects loading
             CurrentScore = 0;
+            MainChar = new MainCharacter(Vector2.Zero, 0f, CommonContent);
+            _camera.SetCameraTarget(MainChar);
+
             #endregion
 
             #region Debug

@@ -38,7 +38,8 @@ namespace ComponentPack.GameScripts
 
         public new void LoadMe(Vector2 newPosition)
         {
-
+            Transform.Position = newPosition;
+            BubbleAnimController.Play("Idle");
         }
 
 
